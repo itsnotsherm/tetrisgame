@@ -1,4 +1,5 @@
 #include <array>
+#include <iostream>
 
 #define DOCTEST_CONFIG_IMPLEMENT
 #include <doctest/doctest.h>
@@ -102,6 +103,15 @@ public:
     Cell get(int x, int y) const { return m_cells.at(y).at(x); }
     void set(int x, int y, Cell cell) { m_cells.at(y).at(x) = cell; }
 
+    void print() const {
+        for (int y = 0; y < BOARD_HEIGHT; ++y) {
+            for (int x = 0; x < BOARD_WIDTH; ++x) {
+                std::cout << (get(x, y) == Cell::Filled ? '#' : '.');
+            }
+            std::cout << '\n';
+        }
+    }
+
 private:
     std::array<std::array<Cell, BOARD_WIDTH>, BOARD_HEIGHT> m_cells{};
 };
@@ -112,6 +122,9 @@ int main(int argc, char** argv) {
     if (context.shouldExit() || test_result != 0) {
         return test_result;
     }
+
+    Board board;
+    board.print();
 
     return 0;
 }
