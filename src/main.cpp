@@ -1,5 +1,6 @@
 #include <array>
 #include <iostream>
+#include <stdexcept>
 
 #define DOCTEST_CONFIG_IMPLEMENT
 #include <doctest/doctest.h>
@@ -93,6 +94,32 @@ struct Piece {
     Point position;
     int rotation;
 };
+
+const std::array<Shape, 4>& rotationsOf(PieceType type) {
+    switch (type) {
+        case PieceType::I: return I_ROTATIONS;
+        case PieceType::O: return O_ROTATIONS;
+        case PieceType::T: return T_ROTATIONS;
+        case PieceType::S: return S_ROTATIONS;
+        case PieceType::Z: return Z_ROTATIONS;
+        case PieceType::J: return J_ROTATIONS;
+        case PieceType::L: return L_ROTATIONS;
+    }
+    throw std::invalid_argument("unknown piece type");
+}
+
+const Shape& shapeOf(const Piece& piece) {
+    return rotationsOf(piece.type)[piece.rotation];
+}
+
+Shape cellsOf(const Piece& piece) {
+    Shape cells = shapeOf(piece);
+    for (Point& cell : cells) {
+        cell.x += piece.position.x;
+        cell.y += piece.position.y;
+    }
+    return cells;
+}
 
 class Board {
 public:
