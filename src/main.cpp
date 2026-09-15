@@ -3,8 +3,8 @@
 #define DOCTEST_CONFIG_IMPLEMENT
 #include <doctest/doctest.h>
 
-constexpr int kBoardWidth = 10;
-constexpr int kBoardHeight = 20;
+constexpr int BOARD_WIDTH = 10;
+constexpr int BOARD_HEIGHT = 20;
 
 enum class Cell { Empty, Filled };
 
@@ -17,7 +17,7 @@ struct Point {
 
 using Shape = std::array<Point, 4>;
 
-constexpr std::array<Shape, 4> kTRotations = {{
+constexpr std::array<Shape, 4> T_ROTATIONS = {{
     {{ {1, 0}, {0, 1}, {1, 1}, {2, 1} }},
     {{ {1, 0}, {1, 1}, {2, 1}, {1, 2} }},
     {{ {0, 1}, {1, 1}, {2, 1}, {1, 2} }},
@@ -27,21 +27,21 @@ constexpr std::array<Shape, 4> kTRotations = {{
 class Board {
 public:
     bool isInside(int x, int y) const {
-        return x >= 0 && x < kBoardWidth && y >= 0 && y < kBoardHeight;
+        return x >= 0 && x < BOARD_WIDTH && y >= 0 && y < BOARD_HEIGHT;
     }
 
-    Cell get(int x, int y) const { return cells_.at(y).at(x); }
-    void set(int x, int y, Cell cell) { cells_.at(y).at(x) = cell; }
+    Cell get(int x, int y) const { return m_cells.at(y).at(x); }
+    void set(int x, int y, Cell cell) { m_cells.at(y).at(x) = cell; }
 
 private:
-    std::array<std::array<Cell, kBoardWidth>, kBoardHeight> cells_{};
+    std::array<std::array<Cell, BOARD_WIDTH>, BOARD_HEIGHT> m_cells{};
 };
 
 int main(int argc, char** argv) {
     doctest::Context context(argc, argv);
-    const int testResult = context.run();
-    if (context.shouldExit() || testResult != 0) {
-        return testResult;
+    const int test_result = context.run();
+    if (context.shouldExit() || test_result != 0) {
+        return test_result;
     }
 
     return 0;
