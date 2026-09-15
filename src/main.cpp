@@ -87,6 +87,12 @@ constexpr std::array<Shape, 4> L_ROTATIONS = {{
     {{ {0, 0}, {1, 0}, {1, 1}, {1, 2} }},
 }};
 
+struct Piece {
+    PieceType type;
+    Point position;
+    int rotation;
+};
+
 class Board {
 public:
     bool isInside(int x, int y) const {
