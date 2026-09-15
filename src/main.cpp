@@ -143,6 +143,21 @@ private:
     std::array<std::array<Cell, BOARD_WIDTH>, BOARD_HEIGHT> m_cells{};
 };
 
+bool fits(const Board& board, const Piece& piece) {
+    for (const Point& cell : cellsOf(piece)) {
+        if (!board.isInside(cell.x, cell.y) || board.get(cell.x, cell.y) != Cell::Empty) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void lock(Board& board, const Piece& piece) {
+    for (const Point& cell : cellsOf(piece)) {
+        board.set(cell.x, cell.y, Cell::Filled);
+    }
+}
+
 int main(int argc, char** argv) {
     doctest::Context context(argc, argv);
     const int test_result = context.run();
