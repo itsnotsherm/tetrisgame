@@ -1,5 +1,6 @@
 #include <array>
 #include <iostream>
+#include <random>
 #include <stdexcept>
 
 #define DOCTEST_CONFIG_IMPLEMENT
@@ -12,10 +13,14 @@ enum class Cell { Empty, Filled };
 
 enum class PieceType { I, O, T, S, Z, J, L };
 
+constexpr int PIECE_TYPE_COUNT = 7;
+
 struct Point {
     int x;
     int y;
 };
+
+constexpr Point SPAWN_POSITION{3, 0};
 
 using Shape = std::array<Point, 4>;
 
@@ -157,6 +162,33 @@ void lock(Board& board, const Piece& piece) {
         board.set(cell.x, cell.y, Cell::Filled);
     }
 }
+
+class Game {
+public:
+    Game() { spawnPiece(); }
+
+    void tick() {
+        Piece moved_down = m_current_piece;
+        ++moved_down.position.y;
+        if (fits(m_board, moved_down)) {
+            m_current_piece = moved_down;
+        } else {
+            lock(m_board, m_current_piece);
+            spawnPiece();
+        }
+    }
+
+private:
+    void spawnPiece() {
+        std::uniform_int_distribution<int> distribution(0, PIECE_TYPE_COUNT - 1);
+        const auto type = static_cast<PieceType>(distribution(m_random_engine));
+        m_current_piece = Piece{type, SPAWN_POSITION, 0};
+    }
+
+    Board m_board;
+    std::mt19937 m_random_engine{std::random_device{}()};
+    Piece m_current_piece{};
+};
 
 int main(int argc, char** argv) {
     doctest::Context context(argc, argv);
