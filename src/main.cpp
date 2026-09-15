@@ -8,6 +8,22 @@ constexpr int kBoardHeight = 20;
 
 enum class Cell { Empty, Filled };
 
+enum class PieceType { I, O, T, S, Z, J, L };
+
+struct Point {
+    int x;
+    int y;
+};
+
+using Shape = std::array<Point, 4>;
+
+constexpr std::array<Shape, 4> kTRotations = {{
+    {{ {1, 0}, {0, 1}, {1, 1}, {2, 1} }},
+    {{ {1, 0}, {1, 1}, {2, 1}, {1, 2} }},
+    {{ {0, 1}, {1, 1}, {2, 1}, {1, 2} }},
+    {{ {1, 0}, {0, 1}, {1, 1}, {1, 2} }},
+}};
+
 class Board {
 public:
     bool isInside(int x, int y) const {
