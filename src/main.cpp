@@ -168,17 +168,35 @@ public:
     Game() { spawnPiece(); }
 
     void tick() {
-        Piece moved_down = m_current_piece;
-        ++moved_down.position.y;
-        if (fits(m_board, moved_down)) {
-            m_current_piece = moved_down;
-        } else {
+        if (!tryMove(0, 1)) {
             lock(m_board, m_current_piece);
             spawnPiece();
         }
     }
 
+    void moveLeft() { tryMove(-1, 0); }
+    void moveRight() { tryMove(1, 0); }
+
+    void rotate() {
+        Piece rotated = m_current_piece;
+        rotated.rotation = (rotated.rotation + 1) % 4;
+        if (fits(m_board, rotated)) {
+            m_current_piece = rotated;
+        }
+    }
+
 private:
+    bool tryMove(int dx, int dy) {
+        Piece moved = m_current_piece;
+        moved.position.x += dx;
+        moved.position.y += dy;
+        if (!fits(m_board, moved)) {
+            return false;
+        }
+        m_current_piece = moved;
+        return true;
+    }
+
     void spawnPiece() {
         std::uniform_int_distribution<int> distribution(0, PIECE_TYPE_COUNT - 1);
         const auto type = static_cast<PieceType>(distribution(m_random_engine));
