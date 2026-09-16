@@ -115,6 +115,11 @@ void runGame() {
 
         terminal.draw(game);
     }
+
+    if (game.isGameOver()) {
+        terminal.drawGameOver(game);
+        terminal.waitForKey();
+    }
 }
 
 int main(int argc, char** argv) {

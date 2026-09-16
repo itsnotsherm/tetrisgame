@@ -1,6 +1,7 @@
 #pragma once
 
 #include <clocale>
+#include <cstring>
 
 #include <ncurses.h>
 
@@ -31,6 +32,12 @@ public:
 
     int readKey() const { return getch(); }
 
+    void waitForKey() const {
+        timeout(-1);
+        getch();
+        timeout(INPUT_POLL_MS);
+    }
+
     void draw(const Game& game) const {
         erase();
         drawBorder();
@@ -46,7 +53,20 @@ public:
         refresh();
     }
 
+    void drawGameOver(const Game& game) const {
+        draw(game);
+        drawCentered(BOARD_TOP + BOARD_HEIGHT / 2, "GAME OVER");
+        drawCentered(BOARD_TOP + BOARD_HEIGHT / 2 + 1, "press any key");
+        refresh();
+    }
+
 private:
+    void drawCentered(int row, const char* text) const {
+        const int inner_width = BOARD_WIDTH * CELL_WIDTH;
+        const int length = static_cast<int>(std::strlen(text));
+        mvaddstr(row, BOARD_LEFT + 1 + (inner_width - length) / 2, text);
+    }
+
     void drawBorder() const {
         const int inner_width = BOARD_WIDTH * CELL_WIDTH;
         const int right = BOARD_LEFT + inner_width + 1;
