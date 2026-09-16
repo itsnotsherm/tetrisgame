@@ -23,6 +23,30 @@ void simulateLineClear() {
     std::cout << '\n';
 }
 
+void simulateLineShift(int full_rows) {
+    Board board;
+
+    for (int row = 0; row < full_rows; ++row) {
+        for (int x = 0; x < BOARD_WIDTH; ++x) {
+            board.set(x, BOARD_HEIGHT - 1 - row, Cell::Filled);
+        }
+    }
+
+    const int above = BOARD_HEIGHT - 1 - full_rows;
+    board.set(0, above, Cell::Filled);
+    board.set(5, above, Cell::Filled);
+    board.set(5, above - 1, Cell::Filled);
+
+    std::cout << full_rows << " full row(s) with loose blocks above\n";
+    board.print();
+    std::cout << '\n';
+
+    board.clearFullLines();
+    std::cout << "after clearFullLines\n";
+    board.print();
+    std::cout << '\n';
+}
+
 void simulateMoves() {
     Game game;
 
@@ -66,6 +90,8 @@ int main(int argc, char** argv) {
     }
 
     simulateLineClear();
+    simulateLineShift(1);
+    simulateLineShift(2);
     simulateMoves();
 
     return 0;
