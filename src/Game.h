@@ -29,6 +29,7 @@ public:
     void tick() {
         if (!tryMove(0, 1)) {
             lock(m_board, m_current_piece);
+            m_board.clearFullLines();
             spawnPiece();
         }
     }

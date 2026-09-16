@@ -17,6 +17,20 @@ public:
     Cell get(int x, int y) const { return m_cells.at(y).at(x); }
     void set(int x, int y, Cell cell) { m_cells.at(y).at(x) = cell; }
 
+    void clearFullLines() {
+        int write = BOARD_HEIGHT - 1;
+        for (int read = BOARD_HEIGHT - 1; read >= 0; --read) {
+            if (!isRowFull(read)) {
+                m_cells.at(write) = m_cells.at(read);
+                --write;
+            }
+        }
+
+        for (int y = write; y >= 0; --y) {
+            m_cells.at(y).fill(Cell::Empty);
+        }
+    }
+
     void print() const {
         for (int y = 0; y < BOARD_HEIGHT; ++y) {
             for (int x = 0; x < BOARD_WIDTH; ++x) {
@@ -27,5 +41,14 @@ public:
     }
 
 private:
+    bool isRowFull(int y) const {
+        for (int x = 0; x < BOARD_WIDTH; ++x) {
+            if (get(x, y) == Cell::Empty) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     std::array<std::array<Cell, BOARD_WIDTH>, BOARD_HEIGHT> m_cells{};
 };
