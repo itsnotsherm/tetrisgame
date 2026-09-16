@@ -99,8 +99,11 @@ void runGame() {
         if (key == 'q') {
             break;
         }
-        if (key == KEY_LEFT) {
-            game.moveLeft();
+        switch (key) {
+            case KEY_LEFT: game.moveLeft(); break;
+            case KEY_RIGHT: game.moveRight(); break;
+            case KEY_UP: game.rotate(); break;
+            default: break;
         }
 
         if (Clock::now() >= next_tick) {
