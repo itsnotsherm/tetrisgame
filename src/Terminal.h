@@ -7,6 +7,7 @@
 #include "Board.h"
 #include "Game.h"
 
+inline constexpr int INPUT_POLL_MS = 10;
 inline constexpr int CELL_WIDTH = 2;
 inline constexpr int BOARD_TOP = 1;
 inline constexpr int BOARD_LEFT = 2;
@@ -20,12 +21,15 @@ public:
         noecho();
         keypad(stdscr, TRUE);
         curs_set(0);
+        timeout(INPUT_POLL_MS);
     }
 
     ~Terminal() { endwin(); }
 
     Terminal(const Terminal&) = delete;
     Terminal& operator=(const Terminal&) = delete;
+
+    int readKey() const { return getch(); }
 
     void draw(const Game& game) const {
         erase();

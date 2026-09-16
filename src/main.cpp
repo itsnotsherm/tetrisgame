@@ -1,6 +1,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT
 #include <doctest/doctest.h>
 
+#include <chrono>
 #include <iostream>
 
 #include <ncurses.h>
@@ -85,6 +86,32 @@ void simulateMoves() {
     game.print();
 }
 
+void runGame() {
+    using Clock = std::chrono::steady_clock;
+    constexpr auto TICK_INTERVAL = std::chrono::milliseconds(500);
+
+    Terminal terminal;
+    Game game;
+    auto next_tick = Clock::now() + TICK_INTERVAL;
+
+    while (!game.isGameOver()) {
+        const int key = terminal.readKey();
+        if (key == 'q') {
+            break;
+        }
+        if (key == KEY_LEFT) {
+            game.moveLeft();
+        }
+
+        if (Clock::now() >= next_tick) {
+            game.tick();
+            next_tick += TICK_INTERVAL;
+        }
+
+        terminal.draw(game);
+    }
+}
+
 int main(int argc, char** argv) {
     doctest::Context context(argc, argv);
     const int test_result = context.run();
@@ -92,10 +119,7 @@ int main(int argc, char** argv) {
         return test_result;
     }
 
-    Terminal terminal;
-    Game game;
-    terminal.draw(game);
-    getch();
+    runGame();
 
     return 0;
 }
