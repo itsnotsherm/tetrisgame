@@ -1,8 +1,44 @@
 #define DOCTEST_CONFIG_IMPLEMENT
 #include <doctest/doctest.h>
 
-#include "Board.h"
+#include <iostream>
+
 #include "Game.h"
+
+void simulateMoves() {
+    Game game;
+
+    auto show = [&game](const char* label) {
+        std::cout << label << '\n';
+        game.print();
+        std::cout << '\n';
+    };
+
+    show("spawned");
+
+    game.moveLeft();
+    game.moveLeft();
+    game.moveLeft();
+    show("moved left 3");
+
+    game.rotate();
+    show("rotated");
+
+    for (int i = 0; i < BOARD_HEIGHT; ++i) {
+        game.tick();
+    }
+    show("after 20 ticks: first piece locked, next piece falling");
+
+    int ticks = 0;
+    while (!game.isGameOver() && ticks < 10000) {
+        game.tick();
+        ++ticks;
+    }
+
+    std::cout << "game over: " << std::boolalpha << game.isGameOver() << " after " << ticks
+              << " more ticks\n";
+    game.print();
+}
 
 int main(int argc, char** argv) {
     doctest::Context context(argc, argv);
@@ -11,8 +47,7 @@ int main(int argc, char** argv) {
         return test_result;
     }
 
-    Board board;
-    board.print();
+    simulateMoves();
 
     return 0;
 }

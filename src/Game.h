@@ -44,6 +44,14 @@ public:
         }
     }
 
+    bool isGameOver() const { return m_game_over; }
+
+    void print() const {
+        Board view = m_board;
+        lock(view, m_current_piece);
+        view.print();
+    }
+
 private:
     bool tryMove(int dx, int dy) {
         Piece moved = m_current_piece;
@@ -60,9 +68,11 @@ private:
         std::uniform_int_distribution<int> distribution(0, PIECE_TYPE_COUNT - 1);
         const auto type = static_cast<PieceType>(distribution(m_random_engine));
         m_current_piece = Piece{type, SPAWN_POSITION, 0};
+        m_game_over = !fits(m_board, m_current_piece);
     }
 
     Board m_board;
     std::mt19937 m_random_engine{std::random_device{}()};
     Piece m_current_piece{};
+    bool m_game_over = false;
 };
