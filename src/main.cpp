@@ -103,6 +103,8 @@ void runGame() {
             case KEY_LEFT: game.moveLeft(); break;
             case KEY_RIGHT: game.moveRight(); break;
             case KEY_UP: game.rotate(); break;
+            case KEY_DOWN: game.softDrop(); break;
+            case ' ': game.hardDrop(); break;
             default: break;
         }
 

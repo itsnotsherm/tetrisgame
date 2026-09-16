@@ -28,11 +28,16 @@ public:
 
     void tick() {
         if (!tryMove(0, 1)) {
-            place(m_board, m_current_piece);
-            m_board.clearFullLines();
-            spawnPiece();
+            lockPiece();
         }
     }
+
+    void hardDrop() {
+        while (tryMove(0, 1)) {}
+        lockPiece();
+    }
+
+    void softDrop() { tryMove(0, 1); }
 
     void moveLeft() { tryMove(-1, 0); }
     void moveRight() { tryMove(1, 0); }
@@ -56,6 +61,12 @@ public:
     void print() const { view().print(); }
 
 private:
+    void lockPiece() {
+        place(m_board, m_current_piece);
+        m_board.clearFullLines();
+        spawnPiece();
+    }
+
     bool tryMove(int dx, int dy) {
         Piece moved = m_current_piece;
         moved.position.x += dx;
