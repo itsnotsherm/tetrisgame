@@ -6,13 +6,14 @@
 #include <ncurses.h>
 
 #include "Game.h"
+#include "Terminal.h"
 
 void simulateLineClear() {
     Board board;
 
     for (int column = 0; column < BOARD_WIDTH; ++column) {
         const Piece vertical_i{PieceType::I, {column - 2, BOARD_HEIGHT - 4}, 1};
-        lock(board, vertical_i);
+        place(board, vertical_i);
     }
 
     std::cout << "10 vertical I pieces locked\n";
@@ -84,15 +85,6 @@ void simulateMoves() {
     game.print();
 }
 
-void helloCurses() {
-    initscr();
-    move(11, 26);
-    printw("Hello Curses!");
-    refresh();
-    getch();
-    endwin();
-}
-
 int main(int argc, char** argv) {
     doctest::Context context(argc, argv);
     const int test_result = context.run();
@@ -100,7 +92,10 @@ int main(int argc, char** argv) {
         return test_result;
     }
 
-    helloCurses();
+    Terminal terminal;
+    Game game;
+    terminal.draw(game);
+    getch();
 
     return 0;
 }

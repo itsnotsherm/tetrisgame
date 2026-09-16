@@ -1,5 +1,7 @@
 #pragma once
 
+#include <clocale>
+
 #include <ncurses.h>
 
 #include "Board.h"
@@ -12,6 +14,7 @@ inline constexpr int BOARD_LEFT = 2;
 class Terminal {
 public:
     Terminal() {
+        std::setlocale(LC_ALL, "");
         initscr();
         cbreak();
         noecho();
@@ -45,13 +48,19 @@ private:
         const int right = BOARD_LEFT + inner_width + 1;
         const int bottom = BOARD_TOP + BOARD_HEIGHT + 1;
 
-        mvaddch(BOARD_TOP, BOARD_LEFT, ACS_ULCORNER);
-        mvaddch(BOARD_TOP, right, ACS_URCORNER);
-        mvaddch(bottom, BOARD_LEFT, ACS_LLCORNER);
-        mvaddch(bottom, right, ACS_LRCORNER);
-        mvhline(BOARD_TOP, BOARD_LEFT + 1, ACS_HLINE, inner_width);
-        mvhline(bottom, BOARD_LEFT + 1, ACS_HLINE, inner_width);
-        mvvline(BOARD_TOP + 1, BOARD_LEFT, ACS_VLINE, BOARD_HEIGHT);
-        mvvline(BOARD_TOP + 1, right, ACS_VLINE, BOARD_HEIGHT);
+        mvaddstr(BOARD_TOP, BOARD_LEFT, "┌");
+        mvaddstr(BOARD_TOP, right, "┐");
+        mvaddstr(bottom, BOARD_LEFT, "└");
+        mvaddstr(bottom, right, "┘");
+
+        for (int x = 0; x < inner_width; ++x) {
+            mvaddstr(BOARD_TOP, BOARD_LEFT + 1 + x, "-");
+            mvaddstr(bottom, BOARD_LEFT + 1 + x, "─");
+        }
+
+        for (int y = 0; y < BOARD_HEIGHT; ++y) {
+            mvaddstr(BOARD_TOP + 1 + y, BOARD_LEFT, "│");
+            mvaddstr(BOARD_TOP + 1 + y, right, "│");
+        }
     }
 };
