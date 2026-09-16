@@ -16,7 +16,7 @@ inline bool fits(const Board& board, const Piece& piece) {
     return true;
 }
 
-inline void lock(Board& board, const Piece& piece) {
+inline void place(Board& board, const Piece& piece) {
     for (const Point& cell : cellsOf(piece)) {
         board.set(cell.x, cell.y, Cell::Filled);
     }
@@ -28,7 +28,7 @@ public:
 
     void tick() {
         if (!tryMove(0, 1)) {
-            lock(m_board, m_current_piece);
+            place(m_board, m_current_piece);
             m_board.clearFullLines();
             spawnPiece();
         }
@@ -47,11 +47,13 @@ public:
 
     bool isGameOver() const { return m_game_over; }
 
-    void print() const {
-        Board view = m_board;
-        lock(view, m_current_piece);
-        view.print();
+    Board view() const {
+        Board board = m_board;
+        place(board, m_current_piece);
+        return board;
     }
+
+    void print() const { view().print(); }
 
 private:
     bool tryMove(int dx, int dy) {
