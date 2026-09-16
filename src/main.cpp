@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#include <ncurses.h>
+
 #include "Game.h"
 
 void simulateLineClear() {
@@ -82,6 +84,15 @@ void simulateMoves() {
     game.print();
 }
 
+void helloCurses() {
+    initscr();
+    move(11, 26);
+    printw("Hello Curses!");
+    refresh();
+    getch();
+    endwin();
+}
+
 int main(int argc, char** argv) {
     doctest::Context context(argc, argv);
     const int test_result = context.run();
@@ -89,10 +100,7 @@ int main(int argc, char** argv) {
         return test_result;
     }
 
-    simulateLineClear();
-    simulateLineShift(1);
-    simulateLineShift(2);
-    simulateMoves();
+    helloCurses();
 
     return 0;
 }

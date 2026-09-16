@@ -14,8 +14,12 @@ FetchContent_Declare(doctest
 )
 FetchContent_MakeAvailable(doctest)
 
+set(CURSES_NEED_NCURSES TRUE)
+find_package(Curses REQUIRED)
+
 add_executable(tetris src/main.cpp)
-target_link_libraries(tetris PRIVATE doctest::doctest)
+target_include_directories(tetris PRIVATE ${CURSES_INCLUDE_DIRS})
+target_link_libraries(tetris PRIVATE doctest::doctest ${CURSES_LIBRARIES})
 target_compile_options(tetris PRIVATE -Wall -Wextra -Wpedantic)
 
 # `ctest` runs the executable in tests-only mode.
